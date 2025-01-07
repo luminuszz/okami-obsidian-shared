@@ -55,6 +55,38 @@ export type Database = {
         }
         Relationships: []
       }
+      note_attachments: {
+        Row: {
+          created_at: string
+          fileId: string
+          id: number
+          note_id: string
+          original_file_name: string
+        }
+        Insert: {
+          created_at?: string
+          fileId: string
+          id?: number
+          note_id?: string
+          original_file_name: string
+        }
+        Update: {
+          created_at?: string
+          fileId?: string
+          id?: number
+          note_id?: string
+          original_file_name?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "note_attachments_note_id_fkey"
+            columns: ["note_id"]
+            isOneToOne: false
+            referencedRelation: "notes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notes: {
         Row: {
           api_key_id: string

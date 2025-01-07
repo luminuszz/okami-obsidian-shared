@@ -13,6 +13,7 @@ import { dracula } from "react-syntax-highlighter/dist/esm/styles/prism";
 
 export interface MarkdownEditorProps {
 	content: string;
+	attachments: Array<{ original_file_name: string; publicUrl: string }>;
 }
 
 export function MarkdownView({ content }: MarkdownEditorProps) {
@@ -41,6 +42,14 @@ export function MarkdownView({ content }: MarkdownEditorProps) {
 								</code>
 							);
 						},
+
+						img: ({ node, ...props }) => (
+							<img
+								{...props}
+								className="max-w-full h-auto"
+								alt={Date.now().toString()}
+							/>
+						),
 					}}
 				>
 					{content}

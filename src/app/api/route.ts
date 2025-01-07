@@ -90,14 +90,11 @@ export async function POST(request: Request) {
 		return new Response("Error uploading file", { status: 500 });
 	}
 
-	return Response.json(
-		{ publicUrl },
-		{
-			headers: {
-				"Access-Control-Allow-Origin": "*",
-			},
-			status: 200,
-			statusText: "OK",
+	return new Response(JSON.stringify({ publicUrl }), {
+		headers: {
+			"Access-Control-Allow-Origin": "*",
 		},
-	);
+		status: 200,
+		statusText: "OK",
+	});
 }
