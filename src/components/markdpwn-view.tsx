@@ -16,8 +16,6 @@ export interface MarkdownEditorProps {
 }
 
 export function MarkdownView({ content }: MarkdownEditorProps) {
-	console.log({ content });
-
 	return (
 		<aside className="flex items-center w-full h-full justify-center">
 			<div className="bg-muted max-w-[600px] w-full h-[600px]  pb-4  gap-4r">
@@ -29,9 +27,9 @@ export function MarkdownView({ content }: MarkdownEditorProps) {
 							const { children, className, node, ...rest } = props;
 							const match = /language-(\w+)/.exec(className || "");
 							return match ? (
+								// @ts-ignore
 								<SyntaxHighlighter
 									{...rest}
-									PreTag="div"
 									// biome-ignore lint/correctness/noChildrenProp: <explanation>
 									children={String(children).replace(/\n$/, "")}
 									language={match[1]}
