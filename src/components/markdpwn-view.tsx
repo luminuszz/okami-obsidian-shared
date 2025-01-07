@@ -44,11 +44,7 @@ export function MarkdownView({ content }: MarkdownEditorProps) {
 						},
 
 						img: ({ node, ...props }) => (
-							<img
-								{...props}
-								className="max-w-full h-auto"
-								alt={Date.now().toString()}
-							/>
+							<img {...props} className="max-w-full h-auto" alt={props.alt} />
 						),
 					}}
 				>
