@@ -2,14 +2,39 @@ import { MarkdownView } from "@/components/markdpwn-view";
 import { supabase } from "@/lib/supabase";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-	title: "Obsidian Note shared",
-	description: "Shared layout for all pages",
-};
-
 type PageProps = {
 	params: Promise<{ id: string }>;
 };
+
+export async function generateMetadata(params: PageProps): Promise<Metadata> {
+	const { id } = await params.params;
+
+	const results = await supabase
+		.from("notes")
+		.select(`title,
+			api_keys (
+				author
+			)
+			`)
+		.eq("id", id)
+		.single();
+
+	if (results.error) {
+		return {
+			title: "Obsidian Note shared",
+			description: "Shared layout for all pages",
+		};
+	}
+
+	const { title, api_keys } = results.data;
+
+	const pageTitle = api_keys?.author ? `${title} - ${api_keys?.author}` : title;
+
+	return {
+		title: pageTitle,
+		description: "Shared layout for all pages",
+	};
+}
 
 export default async function NotePage({ params }: PageProps) {
 	const { id } = await params;
@@ -21,7 +46,10 @@ export default async function NotePage({ params }: PageProps) {
 				note_attachments (
 					fileId,
 					original_file_name
-				)
+				),
+				api_keys (
+				author
+			)
 			`)
 		.eq("id", id)
 		.single();
@@ -30,7 +58,7 @@ export default async function NotePage({ params }: PageProps) {
 		return <h1>Erro</h1>;
 	}
 
-	const { fileId, title, note_attachments } = results.data;
+	const { fileId, title, note_attachments, api_keys } = results.data;
 
 	const fileResponse = await supabase.storage.from("notes").download(fileId);
 
@@ -73,6 +101,7 @@ export default async function NotePage({ params }: PageProps) {
 	return (
 		<main className="flex container mx-auto flex-col items-center gap-4">
 			<h1>{title}</h1>
+			{api_keys?.author && <p>Author: {api_keys?.author}</p>}
 
 			<MarkdownView content={replacedContent} attachments={attachments} />
 		</main>
